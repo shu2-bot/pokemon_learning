@@ -1,5 +1,8 @@
+import nature
+import move
+
 class Pokemon():
-    def __init__(self, name:str, baseStats:list, effortValues:list, individualValue:list):
+    def __init__(self, name:str, baseStats:list, effortValues:list, individualValue:list, nature:nature, level:int):
         # ポケモンの名前
         self.name:str = name
 
@@ -27,19 +30,28 @@ class Pokemon():
         self.individualValue_specialDefense:int = individualValue[4]
         self.individualValue_speed:int = individualValue[5]
 
+        # 性格
+        self.nature:nature = nature
+
+        # レベル
+        self.level = level
+
         # 実数値
-        self.hitpoint:int = self.baseStat_hitPoint * self.effortValue_hitPoint
-        self.attack:int = self.baseStat_attack * self.effortValue_attack
+        self.hitpoint:int = int(self.baseStat_hitPoint + self.individualValue_hitPoint/2 + self.effortValue_hitPoint/8) + 60
+        self.attack:int = int(((self.baseStat_attack + self.individualValue_attack/2 + self.effortValue_attack/8) + 5) * self.nature.correctionFactor[0])
+        self.defense:int = int(((self.baseStat_defense + self.individualValue_defense/2 + self.effortValue_defense/8) + 5) * self.nature.correctionFactor[1])
+        self.defense:int = int(((self.baseStat_specialAttack + self.individualValue_specialAttack/2 + self.effortValue_specialAttack/8) + 5) * self.nature.correctionFactor[2])
+        self.defense:int = int(((self.baseStat_specialDefense + self.individualValue_specialDefense/2 + self.effortValue_specialDefense/8) + 5) * self.nature.correctionFactor[3])
+        self.defense:int = int(((self.baseStat_speed + self.individualValue_speed/2 + self.effortValue_speed/8) + 5) * self.nature.correctionFactor[4])
 
     def show_status(self):
-        print(self.hitpoint, end=", ", )
-        print(self.attack, sep="")
+        print(f"Name: {self.name} | Level: {self.level} | Nature: {self.nature.name}")
+        print(f"HP: {self.hitpoint} | Attack: {self.attack} | Defense: {self.defense}")
 
 # __name__には, importして用いた時はmodule名, スクリプトとして実行したときは__main__が入力される
 # 以下はテストコードとしてよく利用される
 if __name__ == '__main__':
-    offense_pokemon_1 = Pokemon("pikachu", [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0])
+    offense_pokemon_1 = Pokemon("ラムパルド", [97, 165, 60, 65, 50, 58], [0,0,0,0,0,0], [0,0,0,0,0,0], nature.Nature("いじっぱり", [1.1, 1.0, 1.0, 1.0, 0.9]), level=50)
 
-    print(offense_pokemon_1.name)
-    print(offense_pokemon_1.baseStat_hitPoint)
+    # print(offense_pokemon_1.name)
     offense_pokemon_1.show_status()
